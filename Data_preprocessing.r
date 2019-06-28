@@ -30,27 +30,27 @@ fillcolorpink="#E495A5"
 fillcolorgreen="#39BEB1"
 fillcolorpeach="#FB8072"
 
-# load_json <- function(filename) {
-#   js <- jsonlite::read_json(filename)
-#   data.table(
-#     id = sapply(js, `[[`, 'id'),
-#     ingredients = sapply(js, `[[`, 'ingredients'),
-#     cuisine = sapply(js, `[[`, 'cuisine')
-#   )
-# }
-# 
-# train3 <- load_json('train.json')
-# train3[, ingredients := lapply(ingredients, tolower)]
-# extract_text <- function() {
-#   mapply(function(ingredients, cuisine) {
-#     x <- paste(sample(ingredients), collapse=sprintf('#%s#', cuisine))
-#     x <- paste(cuisine, x, cuisine, sep='#')
-#     trimws(x)
-#   }, train3$ingredients, train3$cuisine)
-# }
-# 
-# set.seed(0)
-# texting <- do.call(c, replicate(100, extract_text(), simplify=F))
+load_json <- function(filename) {
+  js <- jsonlite::read_json(filename)
+  data.table(
+    id = sapply(js, `[[`, 'id'),
+    ingredients = sapply(js, `[[`, 'ingredients'),
+    cuisine = sapply(js, `[[`, 'cuisine')
+  )
+}
+
+train3 <- load_json('train.json')
+train3[, ingredients := lapply(ingredients, tolower)]
+extract_text <- function() {
+  mapply(function(ingredients, cuisine) {
+    x <- paste(sample(ingredients), collapse=sprintf('#%s#', cuisine))
+    x <- paste(cuisine, x, cuisine, sep='#')
+    trimws(x)
+  }, train3$ingredients, train3$cuisine)
+}
+
+set.seed(0)
+texting <- do.call(c, replicate(100, extract_text(), simplify=F))
 #Loading the Training Dataset
 train <- fromJSON("train.json", flatten = TRUE)
 
@@ -331,28 +331,28 @@ plotMostImportantIngredientsInCuisine(plot_trainWords,"thai",fillcolorpink)+ coo
 plotMostImportantIngredientsInCuisine(plot_trainWords,"moroccan",fillcolororange)+ coord_polar("y", start=0)
 # create glove vectors
 
-# special_tokenizer <- function(x, ...) space_tokenizer(x, sep = "#", ...)
-# it <- itoken(texting, tokenizer = special_tokenizer)
-# 
-# # Glove Word Embedding
-# # Create vocabulary, terms will be unigrams
-# vocab <- create_vocabulary(it)
-# vectorizer <- vocab_vectorizer(vocab)
-# 
-# # use window of 4 for context words
-# tcm <- create_tcm(it, vectorizer, skip_grams_window=4L)
-# 
-# # create glove vectors
-# glove <- GlobalVectors$new(word_vectors_size=100, vocabulary=vocab, x_max=100)
-# invisible(capture.output(wv_matrix <- glove$fit_transform(tcm, n_iter=500)))
+special_tokenizer <- function(x, ...) space_tokenizer(x, sep = "#", ...)
+it <- itoken(texting, tokenizer = special_tokenizer)
 
-# cuisine_list <- train3[, unique(cuisine)]
-# cuisine_matrix <- wv_matrix[cuisine_list,]
+# Glove Word Embedding
+# Create vocabulary, terms will be unigrams
+vocab <- create_vocabulary(it)
+vectorizer <- vocab_vectorizer(vocab)
 
-# # normalize vectors
-# normalize_l2 <- function(x) {x / sqrt(sum(x^2))}
-# cuisine_matrix <- t(apply(cuisine_matrix, 1, normalize_l2))
-# head(cuisine_matrix, 3)
+# use window of 4 for context words
+tcm <- create_tcm(it, vectorizer, skip_grams_window=4L)
+
+# create glove vectors
+glove <- GlobalVectors$new(word_vectors_size=100, vocabulary=vocab, x_max=100)
+invisible(capture.output(wv_matrix <- glove$fit_transform(tcm, n_iter=500)))
+
+cuisine_list <- train3[, unique(cuisine)]
+cuisine_matrix <- wv_matrix[cuisine_list,]
+
+# normalize vectors
+normalize_l2 <- function(x) {x / sqrt(sum(x^2))}
+cuisine_matrix <- t(apply(cuisine_matrix, 1, normalize_l2))
+head(cuisine_matrix, 3)
 
 similarity_matrix <- cuisine_matrix %*% t(cuisine_matrix)
 similarity_matrix <- matrix(ecdf(similarity_matrix)(similarity_matrix),
