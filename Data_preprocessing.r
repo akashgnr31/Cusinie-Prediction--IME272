@@ -440,4 +440,12 @@ dtm_test_tfidf = transform(dtm_test_tfidf, tfidf)
 
 Test_dtm_tfidf<-as.data.frame(as.matrix(dtm_test_tfidf))
 
+glmnet_classifier = cv.glmnet(x = dtm_train_tfidf, y = train[['cuisine']], 
+                              family = 'multinomial', 
+                              alpha = 1,
+                              type.measure = "class",
+                              nfolds = NFOLDS,
+                              thresh = 1e-3,
+                              maxit = 1e3)
+
 
