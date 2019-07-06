@@ -51,3 +51,8 @@ history = model.fit(X_train_NN, y_train_NN, epochs=20, batch_size=512, validatio
 
 score=model.evaluate(X_test_NN,y_test_NN)
 
+y_predict_NN=model.predict(X_test_NN)
+predictions_encoded = lb.inverse_transform([np.argmax(pred) for pred in y_predict_NN])
+y_predict_NN = lb.fit_transform(predictions_encoded)
+y_test_NN_encoded=lb.inverse_transform([np.argmax(pred) for pred in y_test_NN])
+y_test_NN = lb.fit_transform(y_test_NN_encoded)
