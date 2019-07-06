@@ -30,3 +30,17 @@ def tfidf_features(txt, flag):
     return x 
 X = tfidf_features(train_text, flag="train")
 X_test = tfidf_features(test_text, flag="test")
+
+lb = LabelEncoder()
+y = lb.fit_transform(target)
+y_NN = keras.utils.to_categorical(y)
+
+model = keras.Sequential()
+model.add(keras.layers.Dense(1000, kernel_initializer=keras.initializers.he_normal(seed=1), activation='relu', input_dim=3010))
+model.add(keras.layers.Dropout(0.81))
+model.add(keras.layers.Dense(1000, kernel_initializer=keras.initializers.he_normal(seed=2), activation='relu'))
+model.add(keras.layers.Dropout(0.81))
+model.add(keras.layers.Dense(20, kernel_initializer=keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=4), activation='softmax'))
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
