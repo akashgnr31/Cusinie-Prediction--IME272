@@ -19,3 +19,14 @@ def generate_text(data):
 train_text = generate_text(train)
 test_text = generate_text(test)
 target = [doc['cuisine'] for doc in train]
+
+tfidf = TfidfVectorizer(binary=True)
+def tfidf_features(txt, flag):
+    if flag == "train":
+        x = tfidf.fit_transform(txt)
+    else:
+        x = tfidf.transform(txt)
+    x = x.astype('float16')
+    return x 
+X = tfidf_features(train_text, flag="train")
+X_test = tfidf_features(test_text, flag="test")
