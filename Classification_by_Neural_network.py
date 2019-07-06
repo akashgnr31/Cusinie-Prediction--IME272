@@ -49,3 +49,5 @@ from sklearn.model_selection import train_test_split
 X_train_NN, X_test_NN, y_train_NN, y_test_NN = train_test_split(X, y_NN , random_state = 0)
 history = model.fit(X_train_NN, y_train_NN, epochs=20, batch_size=512, validation_split=0.1)
 
+score=model.evaluate(X_test_NN,y_test_NN)
+
