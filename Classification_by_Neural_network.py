@@ -99,3 +99,20 @@ predictions = lb.inverse_transform([np.argmax(pred) for pred in predictions_enco
 test_id = [doc['id'] for doc in test]
 sub = pd.DataFrame({'id': test_id, 'cuisine': predictions}, columns=['id', 'cuisine'])
 sub.to_csv('output_NN.csv', index=False)
+
+print ("Train the model ... ")
+classifier = SVC(C=100, # penalty parameter
+	 			 kernel='rbf', # kernel type, rbf working fine here
+	 			 degree=3, # default value
+	 			 gamma=1, # kernel coefficient
+	 			 coef0=1, # change to 1 from default value of 0.0
+	 			 shrinking=True, # using shrinking heuristics
+	 			 tol=0.001, # stopping criterion tolerance 
+	      		 probability=False, # no need to enable probability estimates
+	      		 cache_size=200, # 200 MB cache size
+	      		 class_weight=None, # all classes are treated equally 
+	      		 verbose=False, # print the logs 
+	      		 max_iter=-1, # no limit, let it run
+          		 decision_function_shape=None, # will use one vs rest explicitly 
+          		 random_state=None)
+model_SVM = OneVsRestClassifier(classifier, n_jobs=1)
