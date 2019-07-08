@@ -91,3 +91,11 @@ plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
+
+y_predict_NN=model.predict(X_test)
+print(X_test.shape)
+predictions_encoded = lb.inverse_transform([np.argmax(pred) for pred in y_predict_NN])
+predictions = lb.inverse_transform([np.argmax(pred) for pred in predictions_encoded])
+test_id = [doc['id'] for doc in test]
+sub = pd.DataFrame({'id': test_id, 'cuisine': predictions}, columns=['id', 'cuisine'])
+sub.to_csv('output_NN.csv', index=False)
