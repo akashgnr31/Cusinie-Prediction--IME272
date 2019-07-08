@@ -56,3 +56,19 @@ predictions_encoded = lb.inverse_transform([np.argmax(pred) for pred in y_predic
 y_predict_NN = lb.fit_transform(predictions_encoded)
 y_test_NN_encoded=lb.inverse_transform([np.argmax(pred) for pred in y_test_NN])
 y_test_NN = lb.fit_transform(y_test_NN_encoded)
+summary = np.zeros((20, 20), dtype=np.int32)
+
+for y_test_i, y_predict_i in zip(y_test_NN, y_predict_NN):
+    summary[y_test_i, y_predict_i] += 1
+
+summary_df = pd.DataFrame(summary, 
+                          columns=cuisines, 
+                          index=cuisines)
+
+summary_df
+
+summary_norm = ( summary / summary.sum(axis=1) )
+sns.heatmap( summary_norm, 
+            vmin=0, vmax=1, center=0.5, 
+            xticklabels=cuisines,
+            yticklabels=cuisines);
