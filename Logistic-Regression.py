@@ -36,3 +36,26 @@ y = lb.fit_transform(target)
 print ("Train the model ... ")
 
 X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.2 ,random_state = 0)
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+model_LR = LogisticRegression(C=10,dual=False)
+model_LR.fit(X_train , y_train)
+print(model_LR.score(X_test, y_test))
+y_predict_LR=model_LR.predict(X_test)
+
+summary = np.zeros((20, 20), dtype=np.int32)
+for y_test_i, y_predict_i in zip(y_test, y_predict_LR):
+    summary[y_test_i, y_predict_i] += 1
+
+summary_df = pd.DataFrame(summary,columns=cuisines, 
+                          index=cuisines)
+
+summary_df
+
+summary_norm = ( summary / summary.sum(axis=1) )
+sns.heatmap( summary_norm, 
+            vmin=0, vmax=1, center=0.5, 
+            xticklabels=cuisines,
+            yticklabels=cuisines);
