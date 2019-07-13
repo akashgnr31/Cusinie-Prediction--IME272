@@ -65,7 +65,13 @@ Reduced sparse number of columns from 6703 ingredients to 3010.
 The TF-IDF matrix will be the input to most of our Models except in Naive Bayes where DTM is the training data. 
 
 **Data Mining Algorithms Applied**
+
+
 **1.)Artificial Neural Networks**
+
+
 **2.)Support Vector Machine**
+
+
 **3.)Logistic Regression**
 
