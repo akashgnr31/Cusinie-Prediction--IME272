@@ -75,3 +75,11 @@ The TF-IDF matrix will be the input to most of our Models except in Naive Bayes 
 
 **3.)Logistic Regression**
 
+
+**4.)Random Forest**
+
+
+**5.)Naive Bayes**
+
+
+**6.)Ensemble Classifier**
